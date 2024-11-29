@@ -2,9 +2,13 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
+import connectDB from './config/connect.js'; 
+
+
 dotenv.config();
 
-const app = express();
+const app = express()
+connectDB();;
 const PORT = process.env.PORT || 4000;
 
 app.use(express.urlencoded({ extended: true }));
