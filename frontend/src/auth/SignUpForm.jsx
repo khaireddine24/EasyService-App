@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,79 +9,87 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import { useLocation } from 'react-router-dom';
 
-const ClientSignupSchema = z
+const SchemaInscription = z
   .object({
-    firstName: z.string().min(2, 'First name is required'),
-    lastName: z.string().min(2, 'Last name is required'),
-    email: z.string().email('Invalid email address'),
-    phone: z.string().min(8, 'Phone number is required'),
-    address: z.string().min(5, 'Complete address is required'),
-    password: z
+    prenom: z.string().min(2, 'Le prénom est requis'),
+    nom: z.string().min(2, 'Le nom est requis'),
+    email: z.string().email('Adresse email invalide'),
+    telephone: z.string().min(8, 'Le numéro de téléphone est requis'),
+    adresse: z.string().min(5, 'L\'adresse complète est requise'),
+    motDePasse: z
       .string()
-      .min(8, 'Password must be at least 8 characters')
+      .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
       .regex(
         /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/,
-        'Password must include uppercase, number, and special character',
+        'Le mot de passe doit contenir une majuscule, un chiffre et un caractère spécial',
       ),
-    confirmPassword: z.string(),
+    confirmationMotDePasse: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
+  .refine((data) => data.motDePasse === data.confirmationMotDePasse, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['confirmationMotDePasse'],
   });
 
-export const ClientSignUpForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+export const SignUpForm = () => {
+  const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
+  const [afficherConfirmationMotDePasse, setAfficherConfirmationMotDePasse] = useState(false);
+  const [role, setRole] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    const parametresURL = new URLSearchParams(location.search);
+    const roleDansURL = parametresURL.get('role') || 'Client';
+    setRole(roleDansURL);
+  }, [location.search]);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm({
-    resolver: zodResolver(ClientSignupSchema),
+    resolver: zodResolver(SchemaInscription),
   });
 
   const onSubmit = async (data) => {
-    const { confirmPassword, ...submitData } = data;
-    console.log(submitData);
+    const { confirmationMotDePasse, ...donneesAEnvoyer } = data;
+    console.log(donneesAEnvoyer);
   };
 
   return (
-    <Card className="w-[500px] mx-auto">
+    <Card className="w-[500px] mx-auto mt-16 mb-16">
       <CardHeader>
-        <CardTitle className="text-center">Client Sign Up</CardTitle>
+        <CardTitle className="text-center">Inscription {role}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <Controller
-              name="firstName"
+              name="prenom"
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label>First Name</Label>
-                  <Input {...field} placeholder="First name" />
-                  {errors.firstName && (
+                  <Label>Prénom</Label>
+                  <Input {...field} placeholder="Prénom" />
+                  {errors.prenom && (
                     <p className="text-red-500 text-sm">
-                      {errors.firstName.message}
+                      {errors.prenom.message}
                     </p>
                   )}
                 </div>
               )}
             />
             <Controller
-              name="lastName"
+              name="nom"
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label>Last Name</Label>
-                  <Input {...field} placeholder="Last name" />
-                  {errors.lastName && (
+                  <Label>Nom</Label>
+                  <Input {...field} placeholder="Nom" />
+                  {errors.nom && (
                     <p className="text-red-500 text-sm">
-                      {errors.lastName.message}
+                      {errors.nom.message}
                     </p>
                   )}
                 </div>
@@ -98,7 +106,7 @@ export const ClientSignUpForm = () => {
                   <Label>Email</Label>
                   <Input
                     {...field}
-                    placeholder="your.email@example.com"
+                    placeholder="votre.email@exemple.com"
                     type="email"
                   />
                   {errors.email && (
@@ -110,25 +118,25 @@ export const ClientSignUpForm = () => {
               )}
             />
             <Controller
-              name="phone"
+              name="telephone"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <div>
-                  <Label>Phone Number</Label>
+                  <Label>Numéro de téléphone</Label>
                   <div className="relative">
                     <PhoneInput
-                      placeholder="Enter phone number"
+                      placeholder="Entrez votre numéro de téléphone"
                       value={value}
                       onChange={onChange}
-                      defaultCountry="US"
+                      defaultCountry="FR"
                       international
                       withCountryCallingCode
                       className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring focus:ring-blue-300 sm:text-sm"
                     />
                   </div>
-                  {errors.phone && (
+                  {errors.telephone && (
                     <p className="text-red-500 text-sm">
-                      {errors.phone.message}
+                      {errors.telephone.message}
                     </p>
                   )}
                 </div>
@@ -137,15 +145,15 @@ export const ClientSignUpForm = () => {
           </div>
 
           <Controller
-            name="address"
+            name="adresse"
             control={control}
             render={({ field }) => (
               <div>
-                <Label>Address</Label>
-                <Input {...field} placeholder="Complete address" />
-                {errors.address && (
+                <Label>Adresse</Label>
+                <Input {...field} placeholder="Adresse complète" />
+                {errors.adresse && (
                   <p className="text-red-500 text-sm">
-                    {errors.address.message}
+                    {errors.adresse.message}
                   </p>
                 )}
               </div>
@@ -154,62 +162,62 @@ export const ClientSignUpForm = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <Controller
-              name="password"
+              name="motDePasse"
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label>Password</Label>
+                  <Label>Mot de passe</Label>
                   <div className="relative">
                     <Input
                       {...field}
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Password"
+                      type={afficherMotDePasse ? 'text' : 'password'}
+                      placeholder="Mot de passe"
                     />
                     <button
                       type="button"
                       className="absolute right-2 top-1/2 -translate-y-1/2"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setAfficherMotDePasse(!afficherMotDePasse)}
                     >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {afficherMotDePasse ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
-                  {errors.password && (
+                  {errors.motDePasse && (
                     <p className="text-red-500 text-sm">
-                      {errors.password.message}
+                      {errors.motDePasse.message}
                     </p>
                   )}
                 </div>
               )}
             />
             <Controller
-              name="confirmPassword"
+              name="confirmationMotDePasse"
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label>Confirm Password</Label>
+                  <Label>Confirmer le mot de passe</Label>
                   <div className="relative">
                     <Input
                       {...field}
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirm password"
+                      type={afficherConfirmationMotDePasse ? 'text' : 'password'}
+                      placeholder="Confirmer le mot de passe"
                     />
                     <button
                       type="button"
                       className="absolute right-2 top-1/2 -translate-y-1/2"
                       onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
+                        setAfficherConfirmationMotDePasse(!afficherConfirmationMotDePasse)
                       }
                     >
-                      {showConfirmPassword ? (
+                      {afficherConfirmationMotDePasse ? (
                         <EyeOff size={20} />
                       ) : (
                         <Eye size={20} />
                       )}
                     </button>
                   </div>
-                  {errors.confirmPassword && (
+                  {errors.confirmationMotDePasse && (
                     <p className="text-red-500 text-sm">
-                      {errors.confirmPassword.message}
+                      {errors.confirmationMotDePasse.message}
                     </p>
                   )}
                 </div>
@@ -221,10 +229,12 @@ export const ClientSignUpForm = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            Sign Up
+            S'inscrire
           </Button>
         </form>
       </CardContent>
     </Card>
   );
 };
+
+export default SignUpForm;
