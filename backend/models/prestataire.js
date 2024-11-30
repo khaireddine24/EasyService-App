@@ -64,4 +64,4 @@ const prestataireSchema = new mongoose.Schema({
 
 const Prestatire = mongoose.model('Prestatire', prestataireSchema);
 
-module.exports = Prestatire;
+export default Prestatire
