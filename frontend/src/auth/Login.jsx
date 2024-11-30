@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,15 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 
 const LoginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Adresse e-mail invalide'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
+    .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
 });
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-
   const {
     control,
     handleSubmit,
@@ -29,16 +28,17 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    // Implement your login logic here
+    // logic here 
   };
 
   return (
+    <>
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center flex items-center justify-center space-x-2">
-            <LogIn className="text-blue-600" size={32} />
-            <span>Login to Your Account</span>
+            <span>Connectez-vous à votre compte</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -49,7 +49,7 @@ const Login = () => {
                 control={control}
                 render={({ field }) => (
                   <div>
-                    <Label className="mb-2">Email Address</Label>
+                    <Label className="mb-2">Adresse email</Label>
                     <Input
                       {...field}
                       type="email"
@@ -73,12 +73,12 @@ const Login = () => {
                 render={({ field }) => (
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <Label>Password</Label>
+                      <Label>Mot de Passe</Label>
                       <Link 
                         to="/forgot-password" 
                         className="text-sm text-blue-600 hover:underline"
                       >
-                        Forgot Password?
+                        Mot de passe oublié ?
                       </Link>
                     </div>
                     <div className="relative">
@@ -107,33 +107,33 @@ const Login = () => {
 
             <Button 
               type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+              className="w-full bg-yellow-500 hover:bg-yellow-700 transition-colors duration-300"
             >
-              Login
+              Se connecter
             </Button>
 
             <div className="text-center mt-4">
               <p className="text-sm text-gray-600">
-                Don't have an account? {' '}
+                Vous n'avez pas de compte ? {' '}
                 <Link 
                   to="/register" 
                   className="text-blue-600 hover:underline"
                 >
-                  Sign Up
+                  S'inscrire
                 </Link>
               </p>
             </div>
 
             <div className="flex items-center my-4">
               <div className="flex-grow border-t border-gray-300"></div>
-              <span className="mx-4 text-gray-500 text-sm">Or continue with</span>
+              <span className="mx-4 text-gray-500 text-sm">Ou continuez avec</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 ml-[30%]">
               <Button 
                 variant="outline" 
-                className="flex items-center justify-center space-x-2"
+                className="flex items-center justify-center space-x-2 w-full max-w-lg"
               >
                 <img src='/svg/GoogleIcon.svg' alt='icon' className='w-4 h-4'/>
                 <span>Google</span>
@@ -143,6 +143,7 @@ const Login = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

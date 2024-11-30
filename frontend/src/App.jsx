@@ -3,7 +3,7 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Login from "@/auth/Login";
-import { SignUpForm } from "@/auth/SignUpForm";
+import { SignUp } from "@/auth/SignUp";
 import Home from "@/Home";
 import RoleOption from "@/auth/RoleOption";
 
@@ -25,7 +25,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path='login' element={<Login />} />
-        <Route path='register' element={<SignUpForm />} />
+        <Route path='register' element={<SignUp />} />
         <Route path='role-option' element={<RoleOption />} />
       </Route>
     </Routes>
