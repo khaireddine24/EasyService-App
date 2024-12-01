@@ -18,7 +18,11 @@ const SchemaInscription = z
     nom: z.string().min(2, 'Le nom est requis'),
     email: z.string().email('Adresse email invalide'),
     telephone: z.string().min(8, 'Le numéro de téléphone est requis'),
-    adresse: z.string().min(5, 'L\'adresse complète est requise'),
+    adresse: z.object({
+      label: z.string().min(5, 'L\'adresse complète est requise'),
+      latitude: z.number().optional(),
+      longitude: z.number().optional(),
+    }),
     motDePasse: z
       .string()
       .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
@@ -37,6 +41,7 @@ export const SignUp = () => {
   const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
   const [afficherConfirmationMotDePasse, setAfficherConfirmationMotDePasse] = useState(false);
   const [role, setRole] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
 
   useEffect(() => {
@@ -48,15 +53,52 @@ export const SignUp = () => {
   const {
     control,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SchemaInscription),
+    defaultValues: {
+      adresse: { label: '', latitude: undefined, longitude: undefined }
+    }
   });
+
+  const rechercherAdresse = async (query) => {
+    if (query.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const reponse = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`
+      );
+      const donnees = await reponse.json();
+      setSuggestions(donnees.features);
+    } catch (erreur) {
+      console.error('Erreur lors de la recherche d\'adresse:', erreur);
+      setSuggestions([]);
+    }
+  };
+
+  const selectionnerAdresse = (adresse) => {
+    const adresseSelectionnee = {
+      label: adresse.properties.label,
+      latitude: adresse.geometry.coordinates[1],
+      longitude: adresse.geometry.coordinates[0],
+    };
+
+    setValue('adresse', adresseSelectionnee);
+    setSuggestions([]);
+  };
 
   const onSubmit = async (data) => {
     const { confirmationMotDePasse, ...donneesAEnvoyer } = data;
     console.log(donneesAEnvoyer);
+    // Logique d'envoi des données au backend
   };
+
+  const adresseValue = watch('adresse.label');
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -158,17 +200,42 @@ export const SignUp = () => {
               />
             </div>
 
-            {/* Address */}
+            {/* Adresse avec autocomplétion */}
             <Controller
               name="adresse"
               control={control}
               render={({ field }) => (
                 <div>
                   <Label>Adresse</Label>
-                  <Input {...field} placeholder="Adresse complète" />
-                  {errors.adresse && (
+                  <div className="relative">
+                    <Input
+                      placeholder="Commencez à saisir votre adresse"
+                      onChange={(e) => {
+                        field.onChange({ 
+                          ...field.value, 
+                          label: e.target.value 
+                        });
+                        rechercherAdresse(e.target.value);
+                      }}
+                      value={adresseValue}
+                    />
+                    {suggestions.length > 0 && (
+                      <div className="absolute z-10 w-full bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {suggestions.map((suggestion, index) => (
+                          <div
+                            key={index}
+                            className="p-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => selectionnerAdresse(suggestion)}
+                          >
+                            {suggestion.properties.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {errors.adresse?.label && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.adresse.message}
+                      {errors.adresse.label.message}
                     </p>
                   )}
                 </div>

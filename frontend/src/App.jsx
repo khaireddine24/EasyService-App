@@ -6,6 +6,7 @@ import Login from "@/auth/Login";
 import { SignUp } from "@/auth/SignUp";
 import Home from "@/Home";
 import RoleOption from "@/auth/RoleOption";
+import ForgotPassword from './auth/ForgotPassword';
 
 const Layout = () => {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='login' element={<Login />} />
         <Route path='register' element={<SignUp />} />
         <Route path='role-option' element={<RoleOption />} />
+        <Route path='forgot-password' element={<ForgotPassword/>} />
       </Route>
     </Routes>
   );
