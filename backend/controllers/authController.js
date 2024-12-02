@@ -152,11 +152,11 @@ const register = async (req, res) => {
       await user.save();
   
       // Send a success response
-      return res.redirect(`${process.env.VITE_URL}/?status=success&message=Email%20vérifié%20avec%20succès!`);
+      return res.redirect(`${process.env.VITE_URL}/?status=success`);
 
     } catch (error) {
       console.log(error);
-      return res.redirect(`${process.env.VITE_URL}/?status=error&message=Token%20de%20vérification%20invalide%20ou%20expiré.`);
+      return res.redirect(`${process.env.VITE_URL}/?status=error`);
     }
   };
   
@@ -183,9 +183,10 @@ const register = async (req, res) => {
 
 
       try {
-        await sendResetEmail( email,resetToken);
+        await sendResetPasswordLink(email,resetToken);
       } catch (error) {
         return res.status(500).json({ message: 'Error sending email', error: error.message });
+        
       }
        
 

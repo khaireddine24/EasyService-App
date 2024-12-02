@@ -10,5 +10,6 @@ router.route("/refresh").get(authController.refresh);
 router.route("/logout").post(authController.logout);
 router.route("/verify-email").get(authController.verifyEmail);
 router.route("/reset").get(authController.resetPassword);
+router.route("/sendResetEmail").get(authController.resetPassword);
 
 export default router;  // Use export default to export the router
