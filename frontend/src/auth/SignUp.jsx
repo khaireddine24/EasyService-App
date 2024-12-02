@@ -3,15 +3,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff } from 'lucide-react';
-import { z } from 'zod';
+import { Eye, EyeOff,Loader } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import useAuthStore from '@/store/authStore';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// Schéma de validation Zod
 const SchemaInscription = z
   .object({
     prenom: z.string().min(2, 'Le prénom est requis'),
@@ -42,11 +45,15 @@ export const SignUp = () => {
   const [afficherConfirmationMotDePasse, setAfficherConfirmationMotDePasse] = useState(false);
   const [role, setRole] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const location = useLocation();
+  const navigate = useNavigate();
+  const { register } = useAuthStore();
 
   useEffect(() => {
     const parametresURL = new URLSearchParams(location.search);
-    const roleDansURL = parametresURL.get('role') || 'Client';
+    const roleDansURL = parametresURL.get('role') || 'client';
     setRole(roleDansURL);
   }, [location.search]);
 
@@ -93,22 +100,47 @@ export const SignUp = () => {
   };
 
   const onSubmit = async (data) => {
-    const { confirmationMotDePasse, ...donneesAEnvoyer } = data;
-    console.log(donneesAEnvoyer);
-    // Logique d'envoi des données au backend
+    setIsSubmitting(true);
+    try {
+      const donneesAEnvoyer = {
+        firstName: data.prenom,
+        lastName: data.nom,
+        email: data.email,
+        phone: data.telephone,
+        address: data.adresse.label,
+        role: role.toLowerCase(),
+        password: data.motDePasse,
+      };
+  
+      await register(donneesAEnvoyer);
+      toast.success('Inscription effectuée avec succès');
+      navigate('/ServiceSelectionPage');
+      
+    } catch (error) {
+      console.error("Erreur lors de l'inscription :", error);
+      toast.error(
+        error.response?.data?.message || 
+        'Une erreur est survenue lors de l\'inscription'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   const adresseValue = watch('adresse.label');
 
   return (
+    <>
+    
     <div className="container mx-auto px-4 py-8">
-      {role === 'Client' ? (
+      {role === 'client' ? (
         <p className='text-center text-base sm:text-lg mb-4'>
-          S'inscrire en tant que <Link to={`/Register?role=Provider`} className='text-blue-500 underline'>Prestataire</Link>
+          S'inscrire en tant que <Link to={`/Register?role=prestataire`} className='text-blue-500 underline'>Prestataire</Link>
         </p>
       ) : (
         <p className='text-center text-base sm:text-lg mb-4'>
-          S'inscrire en tant que <Link to={`/Register?role=Client`} className='text-blue-500 underline'>Client</Link>
+          S'inscrire en tant que <Link to={`/Register?role=client`} className='text-blue-500 underline'>Client</Link>
         </p>
       )}
 
@@ -120,7 +152,7 @@ export const SignUp = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Name Section - Responsive Grid */}
+            {/* Section Nom - Grille réactive */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 name="prenom"
@@ -154,7 +186,7 @@ export const SignUp = () => {
               />
             </div>
 
-            {/* Contact Section - Responsive Grid */}
+            {/* Section Contact - Grille réactive */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 name="email"
@@ -242,7 +274,7 @@ export const SignUp = () => {
               )}
             />
 
-            {/* Password Section - Responsive Grid */}
+            {/* Section Mot de passe - Grille réactive */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 name="motDePasse"
@@ -309,22 +341,23 @@ export const SignUp = () => {
               />
             </div>
 
-            {/* Submit Button */}
+            {/* Bouton de soumission */}
             <Button
               type="submit"
               className="w-full bg-yellow-500 hover:bg-yellow-700 mt-4"
+              disabled={isSubmitting}
             >
-              S'inscrire
+              {isSubmitting ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : 'S\'inscrire'}
             </Button>
 
-            {/* Divider */}
+            {/* Séparateur */}
             <div className="flex items-center my-4">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="mx-4 text-gray-500 text-sm">Ou continuez avec</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
-            {/* Social Login */}
+            {/* Connexion sociale */}
             <div className="flex justify-center">
               <Button 
                 variant="outline" 
@@ -338,6 +371,7 @@ export const SignUp = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

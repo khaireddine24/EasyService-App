@@ -18,9 +18,9 @@ const RoleOption = () => {
   };
 
   const getCardTitle = () => {
-    if (selectedRole === 'Client') {
+    if (selectedRole === 'client') {
       return "Choisissez votre compte Client";
-    } else if (selectedRole === 'Provider') {
+    } else if (selectedRole === 'prestataire') {
       return "Choisissez votre compte Prestataire";
     }
     return "Choisissez votre rôle";
@@ -37,13 +37,13 @@ const RoleOption = () => {
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <button 
-              onClick={() => handleRoleSelection('Client')}
+              onClick={() => handleRoleSelection('client')}
               className={`w-full h-40 sm:h-48 flex flex-col items-center justify-center space-y-3 sm:space-y-4 rounded-lg border-2 transition-all duration-300 
-                ${selectedRole === 'Client' 
+                ${selectedRole === 'client' 
                   ? 'bg-yellow-500 text-white border-yellow-700' 
                   : 'bg-white text-gray-700 border-gray-300 hover:border-yellow-500'}`}
             >
-              <UserRound size={40} sm:size={48} className={selectedRole === 'Client' ? 'text-white' : 'text-gray-500'} />
+              <UserRound size={40} sm:size={48} className={selectedRole === 'client' ? 'text-white' : 'text-gray-500'} />
               <span className="text-base sm:text-lg font-semibold">Je suis un Client</span>
               <p className="text-xs sm:text-sm text-center px-2 sm:px-4">
                 Embaucher pour un projet et chercher les bons talents
@@ -51,13 +51,13 @@ const RoleOption = () => {
             </button>
 
             <button 
-              onClick={() => handleRoleSelection('Provider')}
+              onClick={() => handleRoleSelection('prestataire')}
               className={`w-full h-40 sm:h-48 flex flex-col items-center justify-center space-y-3 sm:space-y-4 rounded-lg border-2 transition-all duration-300 
-                ${selectedRole === 'Provider' 
+                ${selectedRole === 'prestataire' 
                   ? 'bg-yellow-500 text-white border-yellow-700' 
                   : 'bg-white text-gray-700 border-gray-300 hover:border-yellow-500'}`}
             >
-              <BriefcaseBusiness size={40} sm:size={48} className={selectedRole === 'Provider' ? 'text-white' : 'text-gray-500'} />
+              <BriefcaseBusiness size={40} sm:size={48} className={selectedRole === 'prestataire' ? 'text-white' : 'text-gray-500'} />
               <span className="text-base sm:text-lg font-semibold">Je suis un Prestataire</span>
               <p className="text-xs sm:text-sm text-center px-2 sm:px-4">
                 À la recherche d'un emploi et prêt à mettre en valeur mes compétences

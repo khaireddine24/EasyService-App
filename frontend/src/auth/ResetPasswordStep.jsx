@@ -6,6 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import useAuthStore from '@/store/authStore';
 
 const ResetPasswordSchema = z.object({
   newPassword: z
@@ -27,10 +28,21 @@ const ResetPasswordStep = ({ email, onResetSuccess }) => {
 
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { resetPassword } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleResetPasswordSubmit = (data) => {
-    console.log('Réinitialisation du mot de passe pour:', email, data);
-    onResetSuccess();
+  const handleResetPasswordSubmit = async (data) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await resetPassword(email, data.newPassword);
+      onResetSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Échec de la réinitialisation du mot de passe');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,12 +111,14 @@ const ResetPasswordStep = ({ email, onResetSuccess }) => {
           />
         </div>
 
-        <Button 
-          type="submit" 
-          className="w-full bg-yellow-500 hover:bg-yellow-600"
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+       <Button 
+        type="submit" 
+        disabled={loading}
+        className="w-full bg-yellow-500 hover:bg-yellow-600"
         >
-          Réinitialiser le mot de passe
-        </Button>
+        {loading ? 'Réinitialisation...' : 'Réinitialiser le mot de passe'}
+      </Button>
       </form>
     </div>
   );

@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { 
-  Menu 
-} from 'lucide-react';
+import { Menu, LogOut, User } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import useAuthStore from '@/store/authStore';
 
 const Header = () => {
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const scrollToSection = (sectionId) => {
-    // Close mobile menu
     setIsMenuOpen(false);
 
     if (location.pathname !== '/') {
@@ -25,6 +32,15 @@ const Header = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
   const NavLinks = () => (
     <div className="flex flex-col md:flex-row md:space-x-4">
       <Button 
@@ -32,7 +48,6 @@ const Header = () => {
         onClick={() => scrollToSection('qui-sommes-nous')}
         className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
       >
-       
         Qui Sommes-Nous
       </Button>
 
@@ -41,11 +56,57 @@ const Header = () => {
         onClick={() => scrollToSection('nos-services')}
         className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
       >
-       
         Nos Services
       </Button>
     </div>
   );
+
+  const AuthButtons = () => {
+    if (isAuthenticated) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="rounded-full">
+              <User className="h-5 w-5 mr-2" />
+              {user?.firstName || 'Mon Compte'}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Mon Compte</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => navigate('/profile')}>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profil</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Déconnexion</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+  
+    return (
+      <>
+        <Button 
+          variant="outline" 
+          className="flex items-center space-x-2 hover:bg-[#ddc61971]"
+          asChild
+        >
+          <Link to="/Login">Connexion</Link>
+        </Button>
+  
+        <Button 
+          variant="outline" 
+          className="flex items-center space-x-2 bg-[#DDC619] hover:bg-[#ddc61971]"
+          asChild
+        >
+          <Link to="/role-option">Rejoindre-nous</Link>
+        </Button>
+      </>
+    );
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50 px-4 py-3 flex items-center justify-between">
@@ -64,25 +125,7 @@ const Header = () => {
 
       {/* Desktop Right Section */}
       <div className="hidden md:flex items-center space-x-4">
-        <Button 
-          variant="outline" 
-          className="flex items-center space-x-2 hover:bg-[#ddc61971]"
-          asChild
-        >
-          <Link to="/Login" className="flex items-center">
-            Connexion
-          </Link>
-        </Button>
-
-        <Button 
-          variant="outline" 
-          className="flex items-center space-x-2 bg-[#DDC619] hover:bg-[#ddc61971]"
-          asChild
-        >
-          <Link to="/role-option" className="flex items-center">
-            Rejoindre-nous
-          </Link>
-        </Button>
+        <AuthButtons />
       </div>
 
       {/* Mobile Hamburger Menu */}
@@ -105,25 +148,7 @@ const Header = () => {
               <NavLinks />
 
               <div className="border-t pt-4 space-y-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full hover:bg-[#ddc61971]"
-                  asChild
-                >
-                  <Link to="/Login" className="w-full">
-                    Connexion
-                  </Link>
-                </Button>
-
-                <Button 
-                  variant="outline" 
-                  className={cn("w-full bg-[#DDC619] hover:bg-[#ddc61971], text-white")}
-                  asChild
-                >
-                  <Link to="/role-option" className="w-full">
-                    Rejoindre-nous
-                  </Link>
-                </Button>
+                <AuthButtons />
               </div>
             </div>
           </SheetContent>

@@ -86,7 +86,7 @@ export const LienRapide=[
     {
         id:3,
         title:"Inscription",
-        link:'/Register'
+        link:'/Register?role=client'
     },
     {
         id:4,
@@ -141,3 +141,197 @@ export const Socials=[
         icon:<Linkedin size={24} />
     }
 ]
+
+export const Categories = {
+    "Bricolage - Travaux": [
+        "Bricolage - Petits travaux",
+        "Montage meubles en kit",
+        "Pose de parquet - Revêtement de sol",
+        "Carrelage",
+        "Chaudronnerie - Soudure",
+        "Charpente",
+        "Chauffage - Climatisation",
+        "Couverture - Toiture",
+        "Installation électrique",
+        "Maçonnerie",
+        "Terrassement - Assainissement",
+        "Menuiserie - Huisserie - Agencement",
+        "Peinture - Tapisserie",
+        "Plâtrerie - Murs - Plafonds",
+        "Plomberie - Installation sanitaire",
+        "Ramonage - Fumiste",
+        "Architecte - Maître d'oeuvre",
+        "Serrurerie",
+        "Artisan tout corps d'état - Rénovation",
+        "Taille de pierre - Marbrerie",
+        "Architecte d'intérieur - Décorateur d'intérieur",
+        "Artisan d'art"
+    ],
+    "Jardinage - Piscine": [
+        "Jardinier",
+        "Paysagiste - Aménagement du jardin",
+        "Tonte de pelouse - Débroussaillage",
+        "Elagage et coupe d'arbres",
+        "Taille de haies et d'arbustes",
+        "Clôture Grillage",
+        "Entretien piscine"
+    ],
+    "Déménagement - Manutention": [
+        "Déménageurs et aide au déménagement",
+        "Manutention"
+    ],
+    "Dépannage - Réparation de matériel": [
+        "Dépannage électroménager",
+        "Dépannage smartphone - hifi - video - photo",
+        "Réparation outillage",
+        "Réparation objets",
+        "Dépannage informatique"
+    ],
+    "Entretien - Réparation véhicules": [
+        "Réparation carrosserie",
+        "Lavage auto",
+        "Réparation voiture",
+        "Réparation vélo - moto",
+        "Entretien - Réparation autres véhicules"
+    ],
+    "Services véhiculés": [
+        "Covoiturage (partage de frais)",
+        "Livraison - Transport de colis",
+        "Évacuation déchets - Gravats",
+        "Transport de véhicules - Remorquage",
+        "Promenades et sorties véhiculées"
+    ],
+    "Services à la personne": [
+        "Femme de Ménage",
+        "Lingerie - Repassage",
+        "Couturière",
+        "Aide soignante",
+        "Aide à domicile",
+        "Livraison de courses",
+        "Home sitting - Accueil - Gardiennage"
+    ],
+    "Enfants": [
+        "Baby sitting",
+        "Nounou",
+        "Fille au pair",
+        "Garde périscolaire",
+        "Aide aux devoirs"
+    ],
+    "Animaux": [
+        "Toilettage",
+        "Garde chien",
+        "Garde chat",
+        "Garde animaux",
+        "Pension chevaux",
+        "Paturage",
+        "Dressage"
+    ],
+    "Informatique et web": [
+        "Assistance informatique",
+        "Création site internet",
+        "Création application mobile",
+        "Référencement naturel",
+        "Webmarketing",
+        "Graphisme - Création flyer - plaquette",
+        "Webmaster"
+    ],
+    "Photographie - Vidéo": [
+        "Photographe",
+        "Modèle photo",
+        "Retouche photo",
+        "Vidéaste",
+        "Montage photo video"
+    ],
+    "Animation - Evénements": [
+        "DJ - Disc Jockey",
+        "Père Noël",
+        "Clown",
+        "Magicien - Prestidigitateur",
+        "Animateur",
+        "Chanteur - chanteuse",
+        "Musicien - Groupe de musique",
+        "Comédien",
+        "Danseur",
+        "Humoriste",
+        "Imitateur",
+        "Jongleur",
+        "Hôte - Hôtesse",
+        "Vendeur - Commercial",
+        "Bénévole"
+    ],
+    "Cours - Formations": [
+        "Cours de maths",
+        "Cours de physique",
+        "Cours d'anglais",
+        "Cours de français",
+        "Cours d'espagnol",
+        "Cours d'allemand",
+        "Cours d'arabe",
+        "Cours de mandarin - chinois",
+        "Autres cours de langue",
+        "Cours d'informatique",
+        "Soutien scolaire",
+        "Cours de guitare",
+        "Cours de piano",
+        "Autres Cours de musique",
+        "Cours de cuisine",
+        "Cours de couture",
+        "Cours de dessin",
+        "Cours de danse",
+        "Autres cours loisirs"
+    ],
+    "Administratif - Bureautique": [
+        "Secrétariat",
+        "Assistance juridique",
+        "Conseil fiscal - Déclaration d'impôts",
+        "Comptabilité",
+        "Conciergerie",
+        "Traduction",
+        "Courtier en crédit",
+        "Courtier en assurance",
+        "Généalogie"
+    ],
+    "Mode - Santé - Bien être": [
+        "Coiffure à domicile",
+        "Esthéticienne",
+        "Manucure",
+        "Relooking",
+        "Diététique",
+        "Coaching personnel",
+        "Astrologue",
+        "Hypnose",
+        "Magnétiseur",
+        "Voyant",
+        "Medecine douce"
+    ],
+    "Sport - Partenaires": [
+        "Partenaire tennis",
+        "Partenaire squash",
+        "Partenaire running - marche",
+        "Partenaire natation",
+        "Partenaire musculation - fitness",
+        "Partenaire nautisme",
+        "Partenaire sports de glisse",
+        "Partenaire golf",
+        "Partenaire Loisirs - Autres sports",
+        "Prof de tennis",
+        "Coach running",
+        "Coach fitness - musculation",
+        "Prof de yoga",
+        "Cours de golf",
+        "Moniteur sport de glisse",
+        "Partenaire chasse - pêche",
+        "Coach autres sports"
+    ],
+    "Restauration - Réception": [
+        "Cuisinier - Chef à domicile",
+        "Traiteur",
+        "Sommelier",
+        "Gateau d'anniversaire - cake art",
+        "Cuisine à emporter - Fruits et légumes",
+        "Restauration chez l'habitant",
+        "Préparation - nettoyage de salle",
+        "Serveur - Maître d'hôtel",
+        "Wedding planner - Organisation de fêtes"
+    ]
+};

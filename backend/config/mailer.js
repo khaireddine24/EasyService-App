@@ -36,11 +36,9 @@ export const sendVerificationEmail = async (email, token) => {
     throw error; // Rethrow the error to be handled by the caller
   }
 };
-
-// Reset Password Email Function
-export const sendResetPasswordLink = async (email, token) => {
-  if (!email) {
-    throw new Error('Email is required.');
+export const sendResetOtp = async (email, otp) => {
+  if (!email || !otp) {
+    throw new Error('Email and OTP are required.');
   }
 
   try {
@@ -49,25 +47,23 @@ export const sendResetPasswordLink = async (email, token) => {
     if (!user) {
       user = await Prestataire.findOne({ email });
     }
-    
+
     if (!user) {
       throw new Error('Utilisateur non trouvé.');
     }
 
-    // Reset link
-    const resetLink = `${process.env.VITE_URL}/reset-password?token=${token}`;
-    
-    // Send email
+    // Email content for OTP
     const mailOptions = {
       from: 'no-reply@easyservice.com',
       to: email,
-      subject: 'Réinitialisation du mot de passe',
-      text: `Cliquez sur ce lien pour réinitialiser votre mot de passe : ${resetLink}`,
+      subject: 'Votre Code OTP pour Réinitialisation du Mot de Passe',
+      text: `Bonjour,\n\nVotre code OTP pour réinitialiser votre mot de passe est : ${otp}\n\nCe code est valide pendant 5 minutes.`,
       html: `<p>Bonjour,</p>
-             <p>Pour réinitialiser votre mot de passe, cliquez sur le lien ci-dessous :</p>
-             <a href="${resetLink}">Réinitialiser mon mot de passe</a>`
+             <p>Votre code OTP pour réinitialiser votre mot de passe est : <strong>${otp}</strong></p>
+             <p>Ce code est valide pendant <strong>5 minutes</strong>.</p>`
     };
-    
+
+    // Send email
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
@@ -76,4 +72,4 @@ export const sendResetPasswordLink = async (email, token) => {
   }
 };
 
-export default { sendVerificationEmail, sendResetPasswordLink };
+export default { sendVerificationEmail, sendResetOtp };

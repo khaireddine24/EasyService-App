@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { Eye, EyeOff,Loader } from 'lucide-react';
 import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
+import useAuthStore from '@/store/authStore';
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginSchema = z.object({
   email: z.string().email('Adresse e-mail invalide'),
@@ -18,6 +20,8 @@ const LoginSchema = z.object({
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate=useNavigate();
   const {
     control,
     handleSubmit,
@@ -25,10 +29,23 @@ const Login = () => {
   } = useForm({
     resolver: zodResolver(LoginSchema),
   });
+  const {login}=useAuthStore();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // logic here
+    setIsSubmitting(true);
+    console.log("Données validées :", data);
+    try {
+      await login(data.email, data.password);
+      navigate('/ServiceSelectionPage');
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      toast.error(
+        error.response?.data?.message || 
+        'Une erreur est survenue lors de la connexion'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -111,8 +128,9 @@ const Login = () => {
               <Button
                 type="submit"
                 className="w-full bg-yellow-500 hover:bg-yellow-700 transition-colors duration-300"
+                disabled={isSubmitting}
               >
-                Se connecter
+                {isSubmitting ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : 'Se Connecter'}
               </Button>
 
               <div className="text-center mt-4">
