@@ -36,13 +36,8 @@ const prestataireSchema = new mongoose.Schema({
     required: true
   },
   services: {
-    type: [String],
-    validate: {
-      validator: function(v) {
-        return v.length <= 3; // Ensures that no more than 3 services are selected
-      },
-      message: 'You can select a maximum of 3 services.'
-    },
+    type: [String]
+    ,
     required: true,
     maxlength: 3  // This limits the services array to a max length of 3
   },
@@ -55,13 +50,14 @@ const prestataireSchema = new mongoose.Schema({
       type: String, // URL vers les certificats de qualification
       default: null
     }],
-    additionalDocuments: [{
+    additionlPhoto: [{
       type: String, // URL vers d'autres documents justificatifs
       default: null
     }]
-  }
+  },
+  verifiedEmail: { type: Boolean, default: false },
 }, { timestamps: true });
 
-const Prestatire = mongoose.model('Prestatire', prestataireSchema);
+const Prestataire = mongoose.model('Prestatire', prestataireSchema);
 
-export default Prestatire
+export default Prestataire

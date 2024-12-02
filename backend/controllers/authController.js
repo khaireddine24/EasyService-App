@@ -1,9 +1,10 @@
 
 import Client  from '../models/client.js';
-import Prestatire  from '../models/prestataire.js';
+import Prestataire  from '../models/prestataire.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+import sendVerificationEmail from '../config/mailer.js';
 
 
 
@@ -26,7 +27,7 @@ const register = async (req, res) => {
     let foundUser;
     foundUser = await Client.findOne({ email }).exec();
     if (!foundUser) {
-      foundUser = await Prestatire.findOne({ email }).exec();
+      foundUser = await Prestataire.findOne({ email }).exec();
     }
   
     if (foundUser) {
@@ -49,7 +50,7 @@ const register = async (req, res) => {
         role,
       });
     } else if (role === 'prestataire') {
-      user = await Prestatire.create({
+      user = await Prestataire.create({
         firstName,
         lastName,
         phone,
@@ -59,6 +60,24 @@ const register = async (req, res) => {
         role,
       });
     }
+
+
+
+  // Create email verification token
+  const verificationToken = jwt.sign(
+    { userId: user._id },
+    process.env.VERIFICATION_TOKEN_SECRET,
+    { expiresIn: '1h' } // Token expiration time (1 hour)
+  );
+
+
+  try {
+    await sendVerificationEmail(user.email, verificationToken);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error sending email', error: error.message });
+  }
+
+
   
     // Create an access token (JWT)
     const accessToken = jwt.sign(
@@ -105,8 +124,75 @@ const register = async (req, res) => {
   };
 
 
+  const verifyEmail = async (req, res) => {
+    const { token } = req.query;  // Get the token from the query string
+  
+    if (!token) {
+      return res.status(400).json({ message: 'No verification token provided.' });
+    }
+  
+    try {
+      // Verify the token
+      const decoded = jwt.verify(token, process.env.VERIFICATION_TOKEN_SECRET);
+      const userId = decoded.userId;
+  
+      // Find the user by ID (can be a client or prestataire)
+      let user = await Client.findById(userId);
+      if (!user) {
+        user = await Prestataire.findById(userId);
+      }
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+  
+      // Update the user's verified status
+      user.verifiedEmail = true;
+      await user.save();
+  
+      // Send a success response
+      return res.redirect(`${process.env.VITE_URL}/?status=success&message=Email%20vérifié%20avec%20succès!`);
 
+    } catch (error) {
+      console.log(error);
+      return res.redirect(`${process.env.VITE_URL}/?status=error&message=Token%20de%20vérification%20invalide%20ou%20expiré.`);
+    }
+  };
+  
+ 
 
+  const resetPassword = async (req, res) => {
+    const { token, password, confirmPassword } = req.body;
+  
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Les mots de passe ne correspondent pas.' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, process.env.RESET_PASSWORD_SECRET);
+      const userId = decoded.userId;
+  
+      let user = await Client.findById(userId);
+      if (!user) {
+        user = await Prestataire.findById(userId);
+      }
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+      }
+  
+      // Hacher le mot de passe avant de le sauvegarder
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+      await user.save();
+  
+      return res.redirect(`${process.env.VITE_URL}/login?status=success&message=Mot%20de%20passe%20réinitialisé%20avec%20succès!`);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ message: 'Token de réinitialisation invalide ou expiré.' });
+    }
+  };
+  
 
 
 const login = async (req, res) => {
@@ -124,9 +210,9 @@ const login = async (req, res) => {
    // Check for the user in the Client collection first
    let foundUser = await Client.findOne({ email }).exec();
   
-   // If not found in the Client collection, search in the Prestatire collection
+   // If not found in the Client collection, search in the Prestataire collection
    if (!foundUser) {
-     foundUser = await Prestatire.findOne({ email }).exec();
+     foundUser = await Prestataire.findOne({ email }).exec();
    }
  
    // If the user doesn't exist in either collection
@@ -230,6 +316,10 @@ const refresh = async (req, res) => {
   };
 
 
+
+
+
+
 const logout = (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204); //No content
@@ -240,4 +330,4 @@ const logout = (req, res) => {
     });
     res.json({ message: 'Cookie cleared' });
   };
-export default { login, register, logout, refresh };
+export default { login, register, logout, refresh, verifyEmail, resetPassword };
