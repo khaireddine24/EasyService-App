@@ -5,6 +5,7 @@ import {
   Menu 
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 const Header = () => {
   const location = useLocation();
@@ -116,7 +117,7 @@ const Header = () => {
 
                 <Button 
                   variant="outline" 
-                  className="w-full bg-[#DDC619] hover:bg-[#ddc61971]"
+                  className={cn("w-full bg-[#DDC619] hover:bg-[#ddc61971], text-white")}
                   asChild
                 >
                   <Link to="/role-option" className="w-full">
