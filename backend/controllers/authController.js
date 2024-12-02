@@ -2,7 +2,7 @@
 import Client  from '../models/client.js';
 import OTP  from '../models/otp.js';
 import Prestataire  from '../models/prestataire.js';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import { sendVerificationEmail, sendResetOtp } from '../config/mailer.js';
@@ -31,7 +31,7 @@ const register = async (req, res) => {
     }
   
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
   
     // Create the new user in the appropriate model based on the role
     let user;
@@ -173,7 +173,7 @@ const register = async (req, res) => {
       }
   
       // Hash the new password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcryptjs.hash(password, 10);
   
       // Update the user's password with the hashed password
       foundUser.password = hashedPassword;
@@ -271,7 +271,7 @@ const login = async (req, res) => {
    }
 
    // Compare the provided password with the stored hashed password
-  const match = await bcrypt.compare(password, foundUser.password);
+  const match = await bcryptjs.compare(password, foundUser.password);
 
   // If password doesn't match
   if (!match) {
