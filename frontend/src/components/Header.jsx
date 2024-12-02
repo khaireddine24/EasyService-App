@@ -43,6 +43,7 @@ const Header = () => {
 
   const NavLinks = () => (
     <div className="flex flex-col md:flex-row md:space-x-4">
+      {!isAuthenticated?
       <Button 
         variant="ghost" 
         onClick={() => scrollToSection('qui-sommes-nous')}
@@ -50,7 +51,10 @@ const Header = () => {
       >
         Qui Sommes-Nous
       </Button>
+      :<p></p>}
 
+      {!isAuthenticated?
+      
       <Button 
         variant="ghost" 
         onClick={() => scrollToSection('nos-services')}
@@ -58,6 +62,7 @@ const Header = () => {
       >
         Nos Services
       </Button>
+      :<p></p>}
     </div>
   );
 
@@ -102,7 +107,7 @@ const Header = () => {
           className="flex items-center space-x-2 bg-[#DDC619] hover:bg-[#ddc61971]"
           asChild
         >
-          <Link to="/role-option">Rejoindre-nous</Link>
+          <Link to="/role-option" className='text-white'>Rejoindre-nous</Link>
         </Button>
       </>
     );

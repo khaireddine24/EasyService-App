@@ -275,7 +275,7 @@ export const SignUp = () => {
             />
 
             {/* Section Mot de passe - Grille réactive */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="gap-2">
               <Controller
                 name="motDePasse"
                 control={control}
@@ -304,7 +304,7 @@ export const SignUp = () => {
                     )}
                   </div>
                 )}
-              />
+              /><br/>
               <Controller
                 name="confirmationMotDePasse"
                 control={control}
@@ -349,24 +349,7 @@ export const SignUp = () => {
             >
               {isSubmitting ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : 'S\'inscrire'}
             </Button>
-
-            {/* Séparateur */}
-            <div className="flex items-center my-4">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="mx-4 text-gray-500 text-sm">Ou continuez avec</span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
-
-            {/* Connexion sociale */}
-            <div className="flex justify-center">
-              <Button 
-                variant="outline" 
-                className="flex items-center justify-center space-x-2 w-full max-w-lg"
-              >
-                <img src='/svg/GoogleIcon.svg' alt='icon' className='w-4 h-4'/>
-                <span>Google</span>
-              </Button>
-            </div>
+            
           </form>
         </CardContent>
       </Card>

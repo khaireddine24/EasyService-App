@@ -64,7 +64,6 @@ const register = async (req, res) => {
     { expiresIn: '1h' } // Token expiration time (1 hour)
   );
 
-
   try {
     await sendVerificationEmail(user.email, verificationToken);
   } catch (error) {
@@ -106,8 +105,8 @@ const register = async (req, res) => {
     res.status(201).json({
       accessToken,
       email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      first_name: user.firstName,
+      last_name: user.lastName,
       phone: user.phone,
       address: user.address,
       role: user.role,
@@ -207,9 +206,7 @@ const sendOTP = async (req, res) => {
 
     // Save the OTP to the database
     await OTP.create({ email, otp });
-
-   
-   await sendResetOtp(email,otp)
+    await sendResetOtp(email,otp)
 
    
     return res.status(200).json({ message: 'OTP sent successfully.' });
@@ -259,7 +256,6 @@ const login = async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ message: 'All fields are required' });
   }
-
 
    // Check for the user in the Client collection first
    let foundUser = await Client.findOne({ email }).exec();

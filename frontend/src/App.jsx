@@ -8,10 +8,10 @@ import Home from '@/Home';
 import RoleOption from '@/auth/RoleOption';
 import ForgotPassword from './auth/ForgotPassword';
 import ServiceSelectionPage from './Services/ServiceSelectionPage';
+import Acceuil from './acceuil';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from './store/authStore';
-
 
 const Layout = () => (
   <div className="flex flex-col min-h-screen">
@@ -32,7 +32,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
+        {!isAuthenticated?<Route index element={<Home />} />:<Route index path='Acceuil' element={<Acceuil/>} />}
         <Route path="register" element={<SignUp />} />
         <Route path="role-option" element={<RoleOption />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

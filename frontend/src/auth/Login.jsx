@@ -144,28 +144,6 @@ const Login = () => {
                   </Link>
                 </p>
               </div>
-
-              <div className="flex items-center my-4">
-                <div className="flex-grow border-t border-gray-300"></div>
-                <span className="mx-4 text-gray-500 text-sm">
-                  Ou continuez avec
-                </span>
-                <div className="flex-grow border-t border-gray-300"></div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4">
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-center space-x-2"
-                >
-                  <img
-                    src="/svg/GoogleIcon.svg"
-                    alt="icon"
-                    className="w-4 h-4"
-                  />
-                  <span>Google</span>
-                </Button>
-              </div>
             </form>
           </CardContent>
         </Card>
