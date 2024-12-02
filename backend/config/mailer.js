@@ -38,9 +38,8 @@ const sendVerificationEmail = async (email, token) => {
 
 
 // Fonction pour envoyer un email de reset
-const sendResetPasswordLink = async (req, res) => {
-  const { email } = req.body; // Email de l'utilisateur
-
+const sendResetPasswordLink = async (email,token) => {
+ 
   if (!email) {
     return res.status(400).json({ message: 'Email is required.' });
   }
@@ -56,9 +55,7 @@ const sendResetPasswordLink = async (req, res) => {
       return res.status(404).json({ message: 'Utilisateur non trouvé.' });
     }
 
-    // Créer un token de réinitialisation
-    const token = jwt.sign({ userId: user._id }, process.env.RESET_PASSWORD_SECRET, { expiresIn: '1h' });
-
+   
     // Lien de réinitialisation
     const resetLink = `${process.env.VITE_URL}/reset-password?token=${token}`;
 

@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import sendVerificationEmail from '../config/mailer.js';
+import sendResetPasswordLink from '../config/mailer.js';
 
 
 
@@ -159,6 +160,36 @@ const register = async (req, res) => {
     }
   };
   
+
+  const sendResetEmail = async (req,res) => {
+    const {email} = req.body
+
+    if (!email) {
+      return res.status(400).json({ message: 'L\'email est requis.' });
+    }
+
+    
+      // Chercher l'utilisateur dans la base de données (Client ou Prestataire)
+      let user = await Client.findOne({ email });
+      if (!user) {
+        user = await Prestataire.findOne({ email });
+      }
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+      }
+
+      const resetToken = jwt.sign({ userId: user._id }, process.env.RESET_PASSWORD_SECRET, { expiresIn: '1h' });
+
+
+      try {
+        await sendResetEmail( email,resetToken);
+      } catch (error) {
+        return res.status(500).json({ message: 'Error sending email', error: error.message });
+      }
+       
+
+  }
  
 
   const resetPassword = async (req, res) => {
@@ -193,6 +224,8 @@ const register = async (req, res) => {
     }
   };
   
+
+
 
 
 const login = async (req, res) => {
