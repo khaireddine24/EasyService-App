@@ -1,10 +1,11 @@
 
 import Client  from '../models/client.js';
+import OTP  from '../models/otp.js';
 import Prestataire  from '../models/prestataire.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import { sendVerificationEmail, sendResetPasswordLink } from '../config/mailer.js';
+import { sendVerificationEmail, sendResetOtp } from '../config/mailer.js';
 
 
 const register = async (req, res) => {
@@ -157,75 +158,116 @@ const register = async (req, res) => {
   };
   
 
-  const sendResetEmail = async (req,res) => {
-    const {email} = req.body
-    try {
-    if (!email) {
-      return res.status(400).json({ message: 'L\'email est requis.' });
-    }
 
-    
-      // Chercher l'utilisateur dans la base de données (Client ou Prestataire)
-      let user = await Client.findOne({ email });
-      if (!user) {
-        user = await Prestataire.findOne({ email });
-      }
-  
-      if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé.' });
-      }
-
-      const resetToken = jwt.sign({ userId: user._id }, process.env.RESET_PASSWORD_SECRET, { expiresIn: '1h' });
-
-
-      
-        let isEmailSent=await sendResetPasswordLink(email,resetToken);
-        if(isEmailSent){
-          return res.status(200).json({ message: 'Un email de réinitialisation de mot de pass'});
-        }
-        else{
-          return res.status(500).json({ message: 'Erreur lors de l\'envoi de lien'});
-        }
-      } catch (error) {
-        return res.status(500).json({ message: 'Error sending email', error: error.message });
-        
-      }
-       
-
-  }
- 
 
   const resetPassword = async (req, res) => {
-    const { token, password, confirmPassword } = req.body;
+    const { email, password } = req.body;
   
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Les mots de passe ne correspondent pas.' });
+    // Check if all fields are provided
+    if (!email || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
     }
   
     try {
-      const decoded = jwt.verify(token, process.env.RESET_PASSWORD_SECRET);
-      const userId = decoded.userId;
+      let foundUser;
   
-      let user = await Client.findById(userId);
-      if (!user) {
-        user = await Prestataire.findById(userId);
+      // Check if the user exists in the Client collection
+      foundUser = await Client.findOne({ email }).exec();
+      if (!foundUser) {
+        // If not found in Client, check in the Prestataire collection
+        foundUser = await Prestataire.findOne({ email }).exec();
       }
   
-      if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+      // If the user is still not found, return an error
+      if (!foundUser) {
+        return res.status(401).json({ message: 'User not found.' });
       }
   
-      // Hacher le mot de passe avant de le sauvegarder
+      // Hash the new password
       const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
-      await user.save();
   
-      return res.redirect(`${process.env.VITE_URL}/login?status=success&message=Mot%20de%20passe%20réinitialisé%20avec%20succès!`);
+      // Update the user's password with the hashed password
+      foundUser.password = hashedPassword;
+  
+      // Save the updated user
+      await foundUser.save();
+  
+      // Respond with success message
+      return res.status(200).json({
+        message: 'Password has been successfully reset.',
+      });
     } catch (error) {
+      // Handle any errors that occur
       console.error(error);
-      return res.status(400).json({ message: 'Token de réinitialisation invalide ou expiré.' });
+      return res.status(500).json({ message: 'An error occurred while resetting the password.' });
     }
   };
+  
+
+
+const sendOTP = async (req, res) => {
+  const { email } = req.body;
+
+  console.log('aasfour')
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required.' });
+  }
+
+  try {
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    // Save the OTP to the database
+    await OTP.create({ email, otp });
+
+   
+   await sendResetOtp(email,otp)
+
+   
+    return res.status(200).json({ message: 'OTP sent successfully.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error sending OTP.', error: error.message });
+  }
+};
+
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ message: 'Email and OTP are required.' });
+  }
+
+  try {
+    // Retrieve the most recent OTP for the given email
+    const otpRecord = await OTP.findOne({ email }).sort({ createdAt: -1 }); // Sort by createdAt (descending)
+
+    if (!otpRecord) {
+      return res.status(404).json({ message: 'No OTP found for this email.' });
+    }
+
+    // Check if the OTP matches
+    if (otpRecord.otp !== otp) {
+      return res.status(400).json({ message: 'Invalid OTP.' });
+    }
+
+    // Check if the OTP has expired (5 minutes expiration window)
+    const otpExpirationTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+    if (Date.now() - otpRecord.createdAt > otpExpirationTime) {
+      return res.status(400).json({ message: 'OTP expired.' });
+    }
+
+    // OTP is valid, proceed with further logic (e.g., resetting password)
+    return res.status(200).json({ message: 'OTP verified successfully.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error verifying OTP.', error: error.message });
+  }
+};
+
+
+
+  
+
+
 
 const login = async (req, res) => {
 
@@ -360,4 +402,6 @@ const logout = (req, res) => {
     });
     res.json({ message: 'Cookie cleared' });
   };
-export default { login, register, logout, refresh, verifyEmail, resetPassword,sendResetEmail };
+
+
+export default { login, register, logout, refresh, verifyEmail, resetPassword,sendOTP,verifyOTP };

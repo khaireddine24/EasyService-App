@@ -1,4 +1,4 @@
-import dotenv from 'dotenv' // Charger les variables d'environnement
+import dotenv from 'dotenv' 
 
 
 
