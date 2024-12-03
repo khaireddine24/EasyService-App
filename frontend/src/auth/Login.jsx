@@ -33,10 +33,15 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    console.log("Données validées :", data);
+    const List_Serv=localStorage.getItem('Services');
     try {
       await login(data.email, data.password);
-      navigate('/ServiceSelectionPage');
+      if(!List_Serv){
+        navigate('/ServiceSelectionPage');
+      }
+      else{
+        navigate('/Acceuil');
+      }
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
       toast.error(

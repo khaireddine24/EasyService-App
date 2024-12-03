@@ -107,7 +107,7 @@ const Header = () => {
           className="flex items-center space-x-2 bg-[#DDC619] hover:bg-[#ddc61971]"
           asChild
         >
-          <Link to="/role-option" className='text-white'>Rejoindre-nous</Link>
+          <Link to="/role-option" className='text-white'>Rejoignez-nous</Link>
         </Button>
       </>
     );

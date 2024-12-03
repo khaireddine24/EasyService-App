@@ -8,7 +8,7 @@ const Acceuil = () => {
     <div>
       <h1>Acceuil</h1>
       <p>Bonjour {user?.firstName}</p>
-      <p>Vos Services selectionnée est: {Services}</p>
+      <p>Vos Services selectionnée sont: {Services}</p>
     </div>
   )
 }

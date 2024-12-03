@@ -64,7 +64,7 @@ const ServiceSelectionPage = ({ isLoggedIn, name, onServiceSubmit }) => {
     >
       <p className='text-lg mb-4'>
         Bienvenue dans notre communauté! Commencez par sélectionner 
-        jusqu'à trois services qui vous conviennent le mieux,{' '}
+        jusqu'à trois services qui vous conviennent le mieux {' '}
         <span className='font-bold'>{name}</span>.
       </p>
       <div className="p-6">
