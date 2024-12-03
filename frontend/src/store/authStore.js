@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://easyservice-app-1.onrender.com";
 
 export const useAuthStore = create(
   persist(
