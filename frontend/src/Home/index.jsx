@@ -157,16 +157,8 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
               <p className="text-gray-700 mb-4 md:mb-6">
-                EasyService est une plateforme innovante qui simplifie la
-                connexion entre clients et prestataires de services. Notre
-                mission est de rendre les services du quotidien plus
-                accessibles, rapides et fiables.
-              </p>
-              <p className="text-gray-700">
-                Nous croyons en la qualité, la transparence et la simplicité.
-                Grâce à notre réseau de professionnels soigneusement
-                sélectionnés, nous garantissons des services de haute qualité à
-                chaque interaction.
+              Cette plateforme a pour objectif de mettre en relation toute personne souhaitant avoir ou répondre a des services 
+              du quotidien.
               </p>
             </div>
             <div className="order-1 md:order-2 flex justify-center">

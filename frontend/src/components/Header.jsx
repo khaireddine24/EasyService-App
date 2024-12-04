@@ -119,7 +119,7 @@ const Header = () => {
       <div className="flex items-center space-x-2">
         <Link to="/" className="text-2xl font-bold text-[#181C32] flex items-center">
           <img src="/svg/LogoIcon.svg" className="w-9 h-9" alt="logo" />
-          EasyService
+          Easy Service
         </Link>
       </div>
 
