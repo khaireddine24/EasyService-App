@@ -71,20 +71,59 @@ export const SignUp = () => {
   });
 
   const rechercherAdresse = async (query) => {
-    if (query.length < 3) {
+    const trimmedQuery = query.trim().toLowerCase();
+    
+    if (trimmedQuery.length < 3) {
       setSuggestions([]);
       return;
     }
-
+  
     try {
+      const params = new URLSearchParams({
+        q: trimmedQuery,
+        limit: '5'
+      });
+      // Gérer spécifiquement les codes postaux
+      if (/^\d{5}$/.test(trimmedQuery)) {
+        params.set('postcode', trimmedQuery);
+      }
+  
       const reponse = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`
+        `https://api-adresse.data.gouv.fr/search/?${params.toString()}`
       );
       const donnees = await reponse.json();
-      setSuggestions(donnees.features);
+
+      const filteredSuggestions = donnees.features.filter((suggestion) => {
+        if (!suggestion.properties || !suggestion.geometry) return false;
+  
+        const suggestionLabel = suggestion.properties.label.toLowerCase();
+        const suggestionPostcode = suggestion.properties.postcode || '';
+        return (
+          suggestionLabel.includes(trimmedQuery) || 
+          suggestionPostcode.includes(trimmedQuery) || 
+          (suggestion.geometry.coordinates && 
+           suggestion.geometry.coordinates.length === 2)
+        );
+      });
+  
+      const sortedSuggestions = filteredSuggestions.sort((a, b) => {
+        const aLabel = a.properties.label.toLowerCase();
+        const bLabel = b.properties.label.toLowerCase();
+        const aExactMatch = aLabel === trimmedQuery || 
+                            a.properties.postcode === trimmedQuery;
+        const bExactMatch = bLabel === trimmedQuery || 
+                            b.properties.postcode === trimmedQuery;
+        if (aExactMatch && !bExactMatch) return -1;
+        if (!aExactMatch && bExactMatch) return 1;
+        
+        return 0;
+      });
+  
+      setSuggestions(sortedSuggestions);
     } catch (erreur) {
       console.error('Erreur lors de la recherche d\'adresse:', erreur);
       setSuggestions([]);
+      toast.error('Impossible de charger les suggestions d\'adresse');
     }
   };
 
