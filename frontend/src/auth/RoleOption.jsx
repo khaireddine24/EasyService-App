@@ -72,7 +72,7 @@ const RoleOption = () => {
               className="w-full sm:w-auto px-6 bg-yellow-500 hover:bg-yellow-600"
             >
               {selectedRole 
-                ? `Créer un compte en tant que ${selectedRole === 'Client' ? 'Client' : 'Prestataire'}` 
+                ? `Créer un compte en tant que ${selectedRole === 'client' ? 'Client' : 'Prestataire'}` 
                 : 'Sélectionnez un rôle'}
             </Button>
             <p className='text-center text-sm'>
