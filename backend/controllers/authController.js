@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 
 import { sendVerificationEmail, sendResetOtp } from '../config/mailer.js';
 const register = async (req, res) => {
-    const { firstName, lastName, phone, email, password, address, role } = req.body;
+    const { firstName, lastName, phone, email, password, address, services, role } = req.body;
   
     // Check if all required fields are provided
     if (!firstName || !lastName || !phone || !email || !password || !address || !role) {
@@ -53,6 +53,7 @@ const register = async (req, res) => {
         email,
         password: hashedPassword,
         address,
+        services,
         role,
       });
     }
