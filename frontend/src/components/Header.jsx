@@ -60,7 +60,27 @@ const Header = () => {
         onClick={() => scrollToSection('nos-services')}
         className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
       >
-        Nos Services
+        Les Services
+      </Button>
+      :<p></p>}
+
+    {!isAuthenticated?  
+      <Button 
+        variant="ghost" 
+        onClick={() => scrollToSection('')}
+        className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
+      >
+        Lister des prestataires
+      </Button>
+      :<p></p>}
+
+    {!isAuthenticated?  
+      <Button 
+        variant="ghost" 
+        onClick={() => scrollToSection('')}
+        className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
+      >
+        Avis Client
       </Button>
       :<p></p>}
     </div>
@@ -94,7 +114,7 @@ const Header = () => {
   
     return (
       <>
-        <Button 
+        {/* <Button 
           variant="outline" 
           className="flex items-center space-x-2 hover:bg-[#ddc61971]"
           asChild
@@ -108,7 +128,8 @@ const Header = () => {
           asChild
         >
           <Link to="/role-option" className='text-white'>Rejoignez-nous</Link>
-        </Button>
+        </Button> */}
+        <div></div>
       </>
     );
   };

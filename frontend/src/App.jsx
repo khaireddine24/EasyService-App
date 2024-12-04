@@ -41,7 +41,7 @@ function App() {
           path="ServiceSelectionPage"
           element={
             <ServiceSelectionPage 
-            isLoggedIn={isAuthenticated?true:false} 
+            isLoggedIn={true} 
             name={''}
             onSubmit={handleSubmit}
             />

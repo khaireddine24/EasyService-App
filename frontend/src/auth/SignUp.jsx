@@ -153,7 +153,7 @@ export const SignUp = () => {
   
       await register(donneesAEnvoyer);
       toast.success('Inscription effectuée avec succès');
-      navigate('/ServiceSelectionPage');
+      navigate('/Acceuil');
       
     } catch (error) {
       console.error("Erreur lors de l'inscription :", error);
@@ -390,6 +390,9 @@ export const SignUp = () => {
             </Button>
             
           </form>
+          <p className='text-sm text-center mt-5 '>Si vous avez déjà un compte?{' '} 
+            <Link to={'/login'} className='underline text-blue-500'>Se Connecter</Link>
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -56,7 +56,7 @@ const HeroSection = () => {
                 Devenir Client
               </Button>
             </Link>
-            <Link to={'/Register?role=prestataire'} className="w-full sm:w-auto">
+            <Link to={'/ServiceSelectionPage'} className="w-full sm:w-auto">
               <Button 
                 className="w-full sm:w-auto 
                   bg-yellow-500 
@@ -176,7 +176,7 @@ const Home = () => {
       <section id="nos-services" className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
-            Nos Services Populaires
+            les Services
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             <ServiceCard

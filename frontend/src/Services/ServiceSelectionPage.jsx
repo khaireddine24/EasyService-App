@@ -41,7 +41,7 @@ const ServiceSelectionPage = ({ isLoggedIn, name, onServiceSubmit }) => {
       }
 
       setIsModalOpen(false);
-      navigate('/Acceuil');
+      navigate('/Register?role=prestataire');
       return true;
     } catch (error) {
       console.error('Submission error:', error);
