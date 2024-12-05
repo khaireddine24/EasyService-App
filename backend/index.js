@@ -11,8 +11,7 @@ dotenv.config();
 connectDB();
 const app = express()
 
-// app.use(cors({origin:'https://easy-service-app.vercel.app',credentials:true}));
-app.use(cors({origin:'http://localhost:5173',credentials:true}));
+app.use(cors({origin:'https://easy-service-app.vercel.app',credentials:true}));
 app.use(cookieParser());
 app.use(express.json());
 
