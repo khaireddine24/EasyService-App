@@ -13,8 +13,8 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
 		animation: {
-			'bounce-slow': 'bounce 2s infinite',
-		},
+        'bounce-slow': 'bounce 2s infinite',
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -59,6 +59,6 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 }
 
