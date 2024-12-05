@@ -26,9 +26,6 @@ const Layout = () => (
 
 function App() {
   const {isAuthenticated,user}=useAuthStore();
-  const handleSubmit=()=>{
-    console.log("submit");
-  }
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -37,16 +34,7 @@ function App() {
         <Route path="role-option" element={<RoleOption />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="login" element={<Login />} />
-        <Route
-          path="ServiceSelectionPage"
-          element={
-            <ServiceSelectionPage 
-            isLoggedIn={true} 
-            name={''}
-            onSubmit={handleSubmit}
-            />
-          }
-        />
+        <Route path="ServiceSelectionPage" element={<ServiceSelectionPage/>}/>
       </Route>
     </Routes>
   );

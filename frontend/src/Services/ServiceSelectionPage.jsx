@@ -34,7 +34,7 @@ const ServiceSelectionPage = () => {
     
     // Fermer la modal et naviguer vers la page d'inscription
     setIsModalOpen(false);
-    navigate('/register?role=prestataire');
+    navigate('/Register?role=prestataire');
     
     return Promise.resolve();
   };
