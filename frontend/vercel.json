@@ -1,0 +1,37 @@
+{
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/register",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/role-option",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/forgot-password",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/ServiceSelectionPage",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/Acceuil",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/(.*)",
+        "destination": "/index.html"
+      }
+    ]
+  }
+  

@@ -39,7 +39,7 @@ const HeroSection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
-            <Link to={'/Register'} className="w-full sm:w-auto">
+            <Link to={'/Register?role=client'} className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 className="w-full sm:w-auto 
