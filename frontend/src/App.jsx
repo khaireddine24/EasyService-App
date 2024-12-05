@@ -16,7 +16,7 @@ import useAuthStore from './store/authStore';
 const Layout = () => (
   <div className="flex flex-col min-h-screen">
     <Header />
-    <main className="flex-grow mt-16">
+    <main className="flex-grow mt-8">
       <ToastContainer />
       <Outlet />
     </main>

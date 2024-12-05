@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 
-const API_URL = "https://easyservice-app-1.onrender.com";
+// const API_URL = "https://easyservice-app-1.onrender.com";
+const API_URL = "http://localhost:5000";
 
 export const useAuthStore = create(
   persist(
@@ -13,6 +14,7 @@ export const useAuthStore = create(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      service:null,
 
       // Authentication Actions
       login: async (email, password) => {
@@ -162,6 +164,20 @@ export const useAuthStore = create(
             user: null,
             accessToken: null,
             isAuthenticated: false
+          });
+          throw error;
+        }
+      },
+      updateService:async(email, services)=>{
+        set({ isLoading: true, error: null});
+        try{
+          const response = await axios.post(`${API_URL}/prestataire/update-service`, { email, services });
+          set({ isLoading: false, error: null, service: null });
+          return response.data;
+        } catch(error) {
+          set({ 
+            isLoading: false, 
+            error: error.response?.data?.message || 'Service or Email Not Found' 
           });
           throw error;
         }

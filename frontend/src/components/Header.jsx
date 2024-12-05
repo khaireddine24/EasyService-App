@@ -70,7 +70,7 @@ const Header = () => {
         onClick={() => scrollToSection('')}
         className="text-gray-700 hover:text-yellow-600 md:w-auto w-full md:justify-center justify-start"
       >
-        Lister des prestataires
+        Listing des prestataires
       </Button>
       :<p></p>}
 

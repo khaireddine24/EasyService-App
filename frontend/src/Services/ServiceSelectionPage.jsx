@@ -1,77 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import CustomModal from '@/components/CustomModal';
-import ServiceSelector from './ServiceSelector';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import CustomModal from "@/components/CustomModal";
+import ServiceSelector from "./ServiceSelector";
 
-const ServiceSelectionPage = ({ isLoggedIn, name, onServiceSubmit }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const ServiceSelectionPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedServices, setSelectedServices] = useState([]);
   const navigate = useNavigate();
 
+  // Charger les services précédemment sélectionnés du localStorage
   useEffect(() => {
-    if (isLoggedIn) {
-      setIsModalOpen(true);
-    }
-  }, [isLoggedIn]);
+    const savedServices = JSON.parse(localStorage.getItem('selectedServices') || '[]');
+    setSelectedServices(savedServices);
+  }, []);
 
-  const handleServiceSelect = (services) => {
-    setSelectedServices(services);
+  const handleServiceSelect = (service) => {
+    setSelectedServices(prev => 
+      prev.includes(service) 
+        ? prev.filter(s => s !== service)
+        : [...prev, service]
+    );
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (selectedServices.length === 0) {
-      toast.error('Veuillez sélectionner au moins un service');
-      return false;
+      toast.error('Veuillez sélectionner au moins un service.');
+      return Promise.reject();
     }
-
-    if (selectedServices.length > 3) {
-      toast.error('Vous ne pouvez sélectionner que 3 services maximum');
-      return false;
-    }
-
-    try {
-      // Votre logique de soumission ici
-      console.log('Services sélectionnés:', selectedServices);
-      localStorage.setItem('Services',selectedServices);
-      
-      // Appel à onServiceSubmit si nécessaire
-      if (onServiceSubmit) {
-        await onServiceSubmit(selectedServices);
-      }
-
-      setIsModalOpen(false);
-      navigate('/Register?role=prestataire');
-      return true;
-    } catch (error) {
-      console.error('Submission error:', error);
-      toast.error('Erreur lors de la soumission. Veuillez réessayer.');
-      return false;
-    }
-  };
-
-  const handleCloseModal = () => {
+    
+    // Enregistrer les services sélectionnés dans le localStorage comme un tableau
+    localStorage.setItem('selectedServices', JSON.stringify(selectedServices));
+    
+    // Fermer la modal et naviguer vers la page d'inscription
     setIsModalOpen(false);
+    navigate('/register?role=prestataire');
+    
+    return Promise.resolve();
   };
 
   return (
-    <CustomModal
+    <CustomModal 
       isOpen={isModalOpen}
-      onClose={handleCloseModal}
       onSubmit={handleSubmit}
-      disableClose={true}
-      className="bg-white shadow-lg rounded-lg w-full max-w-4xl"
+      isSubmitDisabled={selectedServices.length === 0}
     >
-      <p className='text-lg mb-4'>
-        Bienvenue dans notre communauté! Commencez par sélectionner 
-        jusqu'à trois services qui vous conviennent le mieux {' '}
-        <span className='font-bold'>{name}</span>.
-      </p>
-      <div className="p-6">
-        <ServiceSelector 
-          onServiceSelect={handleServiceSelect}
-        />
-      </div>
+      <ServiceSelector 
+        onServiceSelect={handleServiceSelect}
+        selectedServices={selectedServices}
+      />
     </CustomModal>
   );
 };

@@ -49,7 +49,7 @@ export const SignUp = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { register } = useAuthStore();
+  const { register,updateService} = useAuthStore();
 
   useEffect(() => {
     const parametresURL = new URLSearchParams(location.search);
@@ -150,8 +150,13 @@ export const SignUp = () => {
         role: role.toLowerCase(),
         password: data.motDePasse,
       };
-  
+    
       await register(donneesAEnvoyer);
+      if(role==='prestataire'){
+        // Récupérer les services depuis localStorage et les convertir en tableau
+        const selectedServices = JSON.parse(localStorage.getItem('selectedServices') || '[]');
+        await updateService(donneesAEnvoyer.email, selectedServices);
+      }
       toast.success('Inscription effectuée avec succès');
       navigate('/Acceuil');
       
@@ -175,11 +180,11 @@ export const SignUp = () => {
     <div className="container mx-auto px-4 py-8">
       {role === 'client' ? (
         <p className='text-center text-base sm:text-lg mb-4'>
-          S'inscrire en tant que <Link to={`/Register?role=prestataire`} className='text-blue-500 underline'>Prestataire</Link>
+          S'inscrire en tant que <Link to={`/Register?role=prestataire`} className='text-blue-500'>Prestataire</Link>
         </p>
-      ) : (
+      ) : ( 
         <p className='text-center text-base sm:text-lg mb-4'>
-          S'inscrire en tant que <Link to={`/Register?role=client`} className='text-blue-500 underline'>Client</Link>
+          S'inscrire en tant que <Link to={`/Register?role=client`} className='text-blue-500'>Client</Link>
         </p>
       )}
 
@@ -391,7 +396,7 @@ export const SignUp = () => {
             
           </form>
           <p className='text-sm text-center mt-5 '>Si vous avez déjà un compte?{' '} 
-            <Link to={'/login'} className='underline text-blue-500'>Se Connecter</Link>
+            <Link to={'/login'} className=' text-blue-500'>Se Connecter</Link>
           </p>
         </CardContent>
       </Card>

@@ -21,22 +21,23 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 flex flex-col items-center justify-center overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
         <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-2xl animate-blob"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-2xl animate-blob animation-delay-2000"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 flex flex-col-reverse md:flex-row items-center justify-between relative z-10">
-        <div className="text-center md:text-left w-full md:w-1/2 space-y-6 px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900 leading-tight">
+      <div className="container mx-auto px-4 md:px-2 flex flex-col-reverse md:flex-row items-center justify-between relative z-10">
+        <div className="text-center md:text-left w-full md:w-1/2 space-y-8 mb-16">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
             La Plateforme de Services qu'il vous faut
           </h1>
-          <p className="text-lg md:text-xl mb-6 text-gray-700 max-w-2xl">
+          <p className="text-lg md:text-xl text-gray-700 max-w-2xl">
             Easy Service : La plateforme intuitive pour particuliers et professionnels, 
             conçue pour trouver facilement des prestataires de qualité.
           </p>
+          
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
             <Link to={'/Register?role=client'} className="w-full sm:w-auto">
               <Button
@@ -47,7 +48,7 @@ const HeroSection = () => {
                   border-yellow-500 
                   hover:border-yellow-600 
                   py-3 px-8 
-                  rounded-full 
+                  rounded-md
                   transition-all 
                   duration-300 
                   shadow-md 
@@ -63,13 +64,13 @@ const HeroSection = () => {
                   hover:bg-yellow-600 
                   text-white 
                   py-3 px-8 
-                  rounded-full 
+                  rounded-md 
                   transition-all 
                   duration-300 
                   shadow-md 
                   hover:shadow-lg"
               >
-                Devenir Préstataire
+                Devenir Prestataire
               </Button>
             </Link>
           </div>
@@ -88,7 +89,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Button */}
+      {/* Scroll Button with Enhanced Animation */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <button 
           onClick={scrollToNextSection}
@@ -102,14 +103,15 @@ const HeroSection = () => {
             focus:outline-none 
             focus:ring-2 
             focus:ring-yellow-500 
-            focus:ring-opacity-50"
+            focus:ring-opacity-50 
+            animate-bounce-slow"
         >
           <ChevronDown 
             size={32} 
             className="text-yellow-500 
               group-hover:text-yellow-600 
-              group-hover:translate-y-1 
-              transition-all 
+              transition-all
+              hover:scale-125
               duration-300"
           />
         </button>
@@ -125,7 +127,7 @@ const Home = () => {
       <HeroSection />
 
       {/* Comment ça marche */}
-      <section id="comment-ca-marche" className="py-12 md:py-16 bg-gray-50">
+      <section id="comment-ca-marche" className="py-12 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
             Comment ça Marche ?
@@ -149,14 +151,14 @@ const Home = () => {
       </section>
 
       {/* Qui Sommes-Nous */}
-      <section id="qui-sommes-nous" className="py-12 md:py-16 bg-gray-100">
-        <div className="container mx-auto px-4">
+      <section id="qui-sommes-nous" className="py-16 md:py-28  bg-gray-100">
+        <div className="container mx-auto px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
             Qui Sommes-Nous ?
           </h2>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
-              <p className="text-gray-700 mb-4 md:mb-6">
+              <p className="text-gray-700 md:text-2xl mb-4 md:mb-6">
               Cette plateforme a pour objectif de mettre en relation toute personne souhaitant avoir ou répondre a des services 
               du quotidien.
               </p>
@@ -173,7 +175,7 @@ const Home = () => {
       </section>
 
       {/* Nos Services */}
-      <section id="nos-services" className="py-12 md:py-16">
+      <section id="nos-services" className="py-12 md:py-28 sm:py-10">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
             les Services

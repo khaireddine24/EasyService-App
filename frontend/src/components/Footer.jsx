@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-white py-12">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h2 className="text-2xl font-bold text-yellow-500 mb-4">EasyService</h2>
+          <h2 className="text-2xl font-bold text-yellow-500 mb-4">Easy Service</h2>
           <p className="text-gray-300 text-sm">
             Votre plateforme de services innovante qui connecte clients et prestataires de manière simple et efficace.
           </p>
@@ -66,7 +66,7 @@ const Footer = () => {
 
       <div className="border-t border-gray-700 mt-8 pt-6 text-center">
         <p className="text-gray-400 text-sm">
-          © {new Date().getFullYear()} EasyService. Tous droits réservés.
+          © {new Date().getFullYear()} Easy Service. Tous droits réservés.
         </p>
       </div>
     </footer>

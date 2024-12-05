@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button';
 
 const CustomModal = ({ 
   isOpen, 
-  onClose, 
   onSubmit, 
   children,
-  disableClose = false 
+  isSubmitDisabled = false
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -16,41 +15,86 @@ const CustomModal = ({
     try {
       await onSubmit();
     } catch (error) {
-      console.error('Submission error:', error);
-    } finally {
+      console.error('Erreur lors de la soumission :', error);
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog 
-      open={isOpen} 
-      onOpenChange={!disableClose ? onClose : undefined}
-    >
-      <DialogContent className="bg-white rounded-md shadow-lg p-6 w-full max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold mb-4">
-            Sélectionnez vos services
+    <Dialog open={isOpen}>
+      <DialogContent className="
+        bg-white 
+        rounded-md 
+        shadow-lg 
+        p-4 
+        sm:p-6 
+        w-[85%] 
+        md:max-w-2xl
+        max-w-xl 
+        mx-auto 
+        space-y-4 
+        max-h-[80vh]  
+        overflow-y-auto    
+      ">
+        <DialogHeader className="text-center space-y-2">
+          <DialogTitle className="
+            text-2xl
+            md:text-4xl 
+            sm:text-2xl 
+            font-bold 
+            mb-2
+            mt-6
+          ">
+            Bienvenue!
           </DialogTitle>
+          <p className="
+            text-sm 
+            sm:text-base 
+            text-gray-600 
+           
+          ">
+            Nous sommes enchantés de vous compter parmi nous !<br/>
+            Commencez par choisir votre domaine d'intervention
+          </p>
         </DialogHeader>
-        <div className="space-y-4">{children}</div>
-        <div className="text-right mt-6 space-x-2">
+        
+        <div className="
+          grid 
+          grid-cols-1 
+          sm:grid-cols-2 
+          md:grid-cols-3 
+          gap-3 
+          sm:gap-4
+        ">
+          {children}
+        </div>
+        
+        <div className="
+          flex 
+          justify-center 
+          items-center 
+          w-full 
+          mt-4 
+          sm:mt-6
+        ">
           <Button 
-            variant="outline" 
+            variant="default" 
             onClick={handleSubmit}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isSubmitDisabled}
+            className="
+              w-full 
+              sm:w-auto 
+              px-4 
+              sm:px-6 
+              py-2 
+              bg-yellow-500 
+              hover:bg-yellow-600 
+              disabled:opacity-50 
+              disabled:cursor-not-allowed
+            "
           >
-            {isSubmitting ? 'Validation...' : 'Valider'}
+            {isSubmitting ? 'Validation...' : 'Continuer'}
           </Button>
-          {!disableClose && (
-            <Button 
-              variant="secondary" 
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              Fermer
-            </Button>
-          )}
         </div>
       </DialogContent>
     </Dialog>
