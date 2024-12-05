@@ -39,10 +39,16 @@ const ServiceSelectionPage = () => {
     return Promise.resolve();
   };
 
+  const handleClose = () => {
+    // Naviguer vers la page d'accueil lorsque le bouton x est cliqué
+    navigate('/');
+  };
+
   return (
     <CustomModal 
       isOpen={isModalOpen}
       onSubmit={handleSubmit}
+      onClose={handleClose}
       isSubmitDisabled={selectedServices.length === 0}
     >
       <ServiceSelector 

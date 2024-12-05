@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 const CustomModal = ({ 
   isOpen, 
   onSubmit, 
+  onClose, 
   children,
   isSubmitDisabled = false
 }) => {
@@ -21,7 +22,7 @@ const CustomModal = ({
   };
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose && onClose()}>
       <DialogContent className="
         bg-white 
         rounded-md 
@@ -36,6 +37,8 @@ const CustomModal = ({
         max-h-[80vh]  
         overflow-y-auto    
       ">
+        
+
         <DialogHeader className="text-center space-y-2">
           <DialogTitle className="
             text-2xl
@@ -51,7 +54,6 @@ const CustomModal = ({
             text-sm 
             sm:text-base 
             text-gray-600 
-           
           ">
             Nous sommes enchantés de vous compter parmi nous !<br/>
             Commencez par choisir votre domaine d'intervention
